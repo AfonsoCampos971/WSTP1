@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="" method="GET">
+                    <div class="form-group">
+                        <label for="search" class="text-center">Search reviews:</label>
+                        <div class="d-flex flex-column">
+                            <input type="text" class="form-control flex-grow-1" id="title"
+                                   placeholder="Enter search terms" name="title"
+                                   value="{{ request.GET.title }}">
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="date-range">Filter by date range:</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="start_date" name="start_date"
+                                       value="{{ request.GET.start_date }}">
+                                <div class="input-group-prepend input-group-append">
+                                    <div class="input-group-text">to</div>
+                                </div>
+                                <input type="date" class="form-control" id="end_date" name="end_date"
+                                       value="{{ request.GET.end_date }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="score-range">Filter by score range:</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="score_low" name="score_low" min="0"
+                                       max="10" placeholder="Minimum score" value="{{ request.GET.score_low }}">
+                                <div class="input-group-prepend input-group-append">
+                                    <div class="input-group-text">to</div>
+                                </div>
+                                <input type="number" class="form-control" id="score_high" name="score_high"
+                                       min="0"
+                                       max="10" placeholder="Maximum score" value="{{ request.GET.score_high }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="genre">Filter by genre:</label>
+                            <select class="form-control" id="genre" name="genre">
+                                <option value="" {% if request.GET.genre == '' %}selected{% endif %}>All</option>
+                                {% for genre_choice, _, _, _ in genres %}
+                                    <option value="{{ genre_choice }}"
+                                            {% if request.GET.genre == genre_choice %}selected{% endif %}>{{ genre_choice }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="best_new_music">Best new music:</label>
+                            <select class="form-control" id="best_new_music" name="best_new_music">
+                                <option value="" {% if not request.GET.best_new_music %}selected{% endif %}>No Filter
+                                </option>
+                                <option value="1" {% if request.GET.best_new_music == "1" %}selected{% endif %}>Yes
+                                </option>
+                                <option value="0" {% if request.GET.best_new_music == "0" %}selected{% endif %}>No
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sort">Sort by:</label>
+                            <select class="form-control" id="sort" name="sort">
+                                <option value="date"
+                                        {% if not request.GET.sort or request.GET.sort == "date" %}selected{% endif %}>
+                                    By Date
+                                </option>
+                                <option value="alpha" {% if request.GET.sort == "alpha" %}selected{% endif %}>
+                                    Alphabetically
+                                </option>
+                                <option value="score" {% if request.GET.sort == "score" %}selected{% endif %}>By Score
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="order">Sort order:</label>
+                            <select class="form-control" id="order" name="order">
+                                <option value="1" {% if request.GET.best_new_music == "1" %}selected{% endif %}>
+                                    Descending
+                                </option>
+                                <option value="0" {% if request.GET.best_new_music == "0" %}selected{% endif %}>
+                                    Ascending
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="artist">Filter by artist:</label>
+                            <select class="form-control select2" id="artist" name="artist">
+                                <option value="" {% if not request.GET.artist %}selected{% endif %}>All</option>
+                                {% for _, artist_name, artist_id in artists %}
+                                    <option value="{{ artist_id }}"
+                                            {% if request.GET.artist == artist_id %}selected{% endif %}>{{ artist_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#artist').select2({
+                                        placeholder: 'Search for artist',
+                                        allowClear: true,
+                                        minimumInputLength: 0
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="author">Filter by author:</label>
+                            <select class="form-control select2" id="author" name="author">
+                                <option value="" {% if not request.GET.artist %}selected{% endif %}>All</option>
+                                {% for _, name, id in authors %}
+                                    <option value="{{ id }}"
+                                            {% if request.GET.author == id %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#author').select2({
+                                        placeholder: 'Search for author',
+                                        allowClear: true,
+                                        minimumInputLength: 0
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="label">Filter by label:</label>
+                            <select class="form-control select2" id="label" name="label">
+                                <option value="" {% if not request.GET.label %}selected{% endif %}>All</option>
+                                {% for _, name, id in labels %}
+                                    <option value="{{ id }}"
+                                            {% if request.GET.label == id %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#label').select2({
+                                        placeholder: 'Search for label',
+                                        allowClear: true,
+                                        minimumInputLength: 0
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Filter reviews</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <p></p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Best New Music</th>
+            <th>Author(s)</th>
+            <th>Artist(s)</th>
+            <th>Label(s)</th>
+            <th>Genre(s)</th>
+        </tr>
+        </thead>
+        <tbody id="search-results">
+        {% for result in reviews %}
+            <tr>
+                <td><a href="{% url 'review_detail' pk=result.id %}">{{ result.title }}</a></td>
+                <td>{{ result.date }}</td>
+                <td>{{ result.score }}</td>
+                <td>{% if result.best_new_music == '1' %}Yes{% else %}No{% endif %}</td>
+                <td>{% for author_tuple in result.authors %}
+                    <a href="{% url 'author_detail' pk=author_tuple.2 %}">{{ author_tuple.1 }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}</td>
+                <td>{% for artist_tuple in result.artists %}
+                    <a href="{% url 'artist_detail' pk=artist_tuple.2 %}">{{ artist_tuple.1 }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}</td>
+                <td>{% for label_tuple in result.labels %}
+                    <a href="{% url 'label_detail' pk=label_tuple.2 %}">{{ label_tuple.1 }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}</td>
+                <td>{% for genre_tuple in result.genres %}
+                    {{ genre_tuple.0 }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">No results found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if reviews|length > page_size %}
+        <ul class="pagination justify-content-center">
+            {% if current_page > 0 %}
+                <li class="page-item"><a class="page-link"
+                                         href="?page=
+                                         {{ current_page|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ current_page|add:'1' }}</span></li>
+            <li class="page-item"><a class="page-link" href="?page=
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    {{ current_page|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+            </li>
+
+        </ul>
+    {% endif %}
+
+
+
+{% endblock %}

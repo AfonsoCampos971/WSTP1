@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Genres</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Genre</th>
+        <th>Review Count</th>
+        <th>Average Score</th>
+        <th>Best New Music Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for genre in genres %}
+        <tr>
+            <td><a href="{% url 'home' %}?genre={{ genre.0 }}">{{ genre.0 }}</a></td>
+          <td>{{ genre.1 }}</td>
+          <td>{{ genre.2|floatformat:2 }}</td>
+            <td><a href="{% url 'home' %}?genre={{ genre.0 }}&best_new_music=1">{{ genre.3 }}</a></td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No genres found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

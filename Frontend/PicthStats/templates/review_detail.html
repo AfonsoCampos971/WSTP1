@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">{{ review.title }}</h2>
+        <h6 class="card-subtitle mb-2 text-muted">{{ review.score }}</h6>
+        <p class="card-text"><a href="{{ review.url }}">{{ review.url }}</a></p>
+        {% if review.best_new_music == "1" %}
+          <p class="card-text"><span class="badge bg-success">Best new music</span></p>
+        {% endif %}
+        <hr>
+        <p class="card-text">Date: {{ review.date }}</p>
+        <p class="card-text">Authors: {% for author_tuple in review.authors %}
+                    <a href="{% url 'author_detail' pk=author_tuple.2 %}">{{ author_tuple.1 }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</p>
+        <p class="card-text">Genres: {% for genre_tuple in review.genres %}
+            <a href="{% url 'home' %}?genre={{ genre_tuple.0 }}">{{ genre_tuple.0 }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</p>
+        <p class="card-text">Labels: {% for label_tuple in review.labels %}
+                    <a href="{% url 'label_detail' pk=label_tuple.2 %}">{{ label_tuple.1 }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</p>
+        <p class="card-text">Artists: {% for artist_tuple in review.artists %}
+                    <a href="{% url 'artist_detail' pk=artist_tuple.2 %}">{{ artist_tuple.1 }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
